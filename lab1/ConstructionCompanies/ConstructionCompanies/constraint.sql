@@ -1,0 +1,31 @@
+USE ConstructionCompanies
+GO
+
+ALTER TABLE C ADD
+CONSTRAINT PK_CompaniesId PRIMARY KEY (CompaniesId), 
+CONSTRAINT UK_CompanyName UNIQUE (NameCompany)
+GO
+
+ALTER TABLE H ADD
+CONSTRAINT PK_HomeID PRIMARY KEY (HomeId),
+CONSTRAINT UK_Licens UNIQUE (License)
+GO
+
+ALTER TABLE P ADD
+CONSTRAINT PK_ProjectID PRIMARY KEY (ProjectId)
+GO
+
+ALTER TABLE CHP ADD
+CONSTRAINT PK_CHP PRIMARY KEY (CompaniesId, HomeId, ProjectId),
+CONSTRAINT FK_CHP_C FOREIGN KEY (CompaniesId) REFERENCES C(CompaniesId),
+CONSTRAINT FK_CHP_H FOREIGN KEY (HomeId) REFERENCES H(HomeId),
+CONSTRAINT FK_CHP_P FOREIGN KEY (ProjectId) REFERENCES P(ProjectId)
+GO
+
+CREATE RULE rule_max_floor 
+AS
+	@floor < 50
+GO
+
+EXEC sp_bindrule 'rule_max_floor', 'H.NumberFloors'
+GO
